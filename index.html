@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KIT FESTA BACANUDO</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .fundo {
+            background-image: linear-gradient(45deg, black, rgb(8, 117, 19));
+            height: 100%;
+            min-height: 100vh;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .calcular {
+            background-color: rgb(0, 0, 0);
+            border-radius: 5%;
+            padding: 15px;
+            width: 300px;
+        }
+
+        .button, .salvar {
+            height: 25px;
+            padding: 5px;
+            margin: 10px;
+            text-align: center;
+        }
+
+        .resultado {
+            width: 100%;
+            height: auto;
+            background-color: white;
+            color: black;
+            margin: 10px 0;
+            text-align: left;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .nome {
+            width: 100%;
+            font-size: large;
+            text-align: left;
+            margin-bottom: 10px;
+        }
+
+        .historico {
+            width: 90%;
+            margin: 20px auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: black;
+            padding: 10px;
+            border-radius: 5px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .historico-item {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+            color: #000;
+        }
+
+        .total {
+            margin-top: 20px;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: left;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="fundo">
+        <h1>KIT FESTA BACANUDO</h1>
+        <div class="calcular">
+            <h1>Suprimentos para a Festa</h1>
+            <div class="nome">
+                <h5>Nome</h5>
+                <input type="text" name="username" placeholder="Nome" id="username" />
+                <h5>Quantidade de Pessoas</h5>
+                <input type="number" name="pessoas" placeholder="Quantidade" id="numpessoas" />
+            </div>
+            <button class="button" onclick="calcularSuprimentos()">Calcular Suprimentos</button>
+            <div class="resultado" id="resultado">
+                <p>Lista de Suprimentos</p>
+                <h5>Refrigerante:</h5>
+                <h5>Água:</h5>
+                <h5>Bolo:</h5>
+                <h5>Doces (Unidades):</h5>
+                <h5>Salgadinhos (Unidades):</h5>
+            </div>  
+            <button class="salvar" onclick="salvarResultado()">Salvar</button>
+        </div>
+        <div class="historico" id="historico">
+            <h2>Histórico de Resultados</h2>
+            <!-- Histórico será inserido aqui -->
+        </div>
+        <div class="total" id="total">
+            <h2>Total dos Suprimentos</h2>
+            <p><strong>Refrigerante:</strong> 0 litros</p>
+            <p><strong>Água:</strong> 0 litros</p>
+            <p><strong>Bolo:</strong> 0 quilos</p>
+            <p><strong>Doces:</strong> 0 unidades</p>
+            <p><strong>Salgadinhos:</strong> 0 unidades</p>
+        </div>
+    </div>
+    <script>
+        let historicoResultados = [];
+        let totalRefri = 0;
+        let totalAgua = 0;
+        let totalBolo = 0;
+        let totalDoces = 0;
+        let totalSalgados = 0;
+
+        function calcularSuprimentos() {
+            const username = document.getElementById('username').value;
+            const numpessoas = document.getElementById('numpessoas').value;
+
+            if (username.trim() === "") {
+                alert('Por favor, insira um nome.');
+                return;
+            }
+            
+            if (numpessoas < 1) {
+                alert('Insira um número válido de pessoas.');
+                return;
+            }
+
+            const refriPorPessoa = 0.6; // Litros por pessoa
+            const aguaPorPessoa = 0.2; // Litros por pessoa
+            const boloPorPessoa = 0.1; // Quilos por pessoa
+            const docesPorPessoa = 3; // Unidades por pessoa
+            const salgadosPorPessoa = 10; // Unidades por pessoa
+
+            const totalRefriCalc = refriPorPessoa * numpessoas;
+            const totalAguaCalc = aguaPorPessoa * numpessoas;
+            const totalBoloCalc = boloPorPessoa * numpessoas;
+            const totalDocesCalc = docesPorPessoa * numpessoas;
+            const totalSalgadosCalc = salgadosPorPessoa * numpessoas;
+
+            const resulDiv = document.getElementById('resultado');
+            resulDiv.innerHTML = `
+                <h2>Suprimentos Necessários</h2>
+                <p><strong>Refrigerante:</strong> ${totalRefriCalc.toFixed(2)} litros</p>
+                <p><strong>Água:</strong> ${totalAguaCalc.toFixed(2)} litros</p>
+                <p><strong>Bolo:</strong> ${totalBoloCalc.toFixed(2)} quilos</p>
+                <p><strong>Doces:</strong> ${totalDocesCalc} unidades</p>
+                <p><strong>Salgadinhos:</strong> ${totalSalgadosCalc} unidades</p>
+            `;
+        }
+
+        function salvarResultado() {
+            const username = document.getElementById('username').value;
+            if (username.trim() === "") {
+                alert('Por favor, insira um nome.');
+                return;
+            }
+
+            const resultadoTexto = document.getElementById('resultado').innerText;
+            const resultadoCompleto = `Nome: ${username}\n${resultadoTexto}`;
+
+            historicoResultados.push(resultadoCompleto);
+            atualizarHistorico();
+
+            const numpessoas = document.getElementById('numpessoas').value;
+            const refriPorPessoa = 0.6; // Litros por pessoa
+            const aguaPorPessoa = 0.2; // Litros por pessoa
+            const boloPorPessoa = 0.1; // Quilos por pessoa
+            const docesPorPessoa = 3; // Unidades por pessoa
+            const salgadosPorPessoa = 10; // Unidades por pessoa
+
+            totalRefri += refriPorPessoa * numpessoas;
+            totalAgua += aguaPorPessoa * numpessoas;
+            totalBolo += boloPorPessoa * numpessoas;
+            totalDoces += docesPorPessoa * numpessoas;
+            totalSalgados += salgadosPorPessoa * numpessoas;
+
+            atualizarTotal();
+        }
+
+        function atualizarHistorico() {
+            const historicoDiv = document.getElementById('historico');
+            historicoDiv.innerHTML = '<h2>Histórico de Resultados</h2>';
+
+            historicoResultados.forEach((resultado, index) => {
+                const resultadoElemento = document.createElement('div');
+                resultadoElemento.classList.add('historico-item');
+                resultadoElemento.innerText = `Resultado ${index + 1}:\n${resultado}`;
+                historicoDiv.appendChild(resultadoElemento);
+            });
+        }
+
+        function atualizarTotal() {
+            const totalDiv = document.getElementById('total');
+            totalDiv.innerHTML = `
+                <h2>Total dos Suprimentos</h2>
+                <p><strong>Refrigerante:</strong> ${totalRefri.toFixed(2)} litros</p>
+                <p><strong>Água:</strong> ${totalAgua.toFixed(2)} litros</p>
+                <p><strong>Bolo:</strong> ${totalBolo.toFixed(2)} quilos</p>
+                <p><strong>Doces:</strong> ${totalDoces} unidades</p>
+                <p><strong>Salgadinhos:</strong> ${totalSalgados} unidades</p>
+            `;
+        }
+    </script>
+</body>
+</html>
